@@ -1,0 +1,39 @@
+Index: alsa-lib-1.0.25/src/ucm/main.c
+===================================================================
+--- alsa-lib-1.0.25.orig/src/ucm/main.c	2012-02-21 14:37:25.465485002 +0800
++++ alsa-lib-1.0.25/src/ucm/main.c	2012-02-21 14:38:41.309485042 +0800
+@@ -1468,12 +1468,16 @@
+                            int enable)
+ {
+         struct use_case_device *device;
++        long status;
+ 
+         if (uc_mgr->active_verb == NULL)
+                 return -ENOENT;
+         device = find_device(uc_mgr, uc_mgr->active_verb, device_name, 1);
+         if (device == NULL)
+                 return -ENOENT;
++        status = device_status(uc_mgr, device_name);
++        if ((!status && !enable) || (status && enable))
++            return 0;
+         return set_device(uc_mgr, device, enable);
+ }
+ 
+@@ -1482,6 +1486,7 @@
+                              int enable)
+ {
+         struct use_case_modifier *modifier;
++        long status;
+ 
+         if (uc_mgr->active_verb == NULL)
+                 return -ENOENT;
+@@ -1489,6 +1494,9 @@
+         modifier = find_modifier(uc_mgr, uc_mgr->active_verb, modifier_name, 1);
+         if (modifier == NULL)
+                 return -ENOENT;
++        status = modifier_status(uc_mgr, modifier_name);
++        if ((!status && !enable) || (status && enable))
++            return 0;
+         return set_modifier(uc_mgr, modifier, enable);
+ }
+ 

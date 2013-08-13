@@ -1,0 +1,77 @@
+From 36ae44068e4a1e04660e01d8c3423b4b9f9fb3fa Mon Sep 17 00:00:00 2001
+From: Arun Raghavan <arun.raghavan@collabora.co.uk>
+Date: Fri, 20 Jan 2012 08:12:29 +0000
+Subject: FIXME: Patch by Feng Wei from Linaro
+
+---
+diff --git a/src/ucm/main.c b/src/ucm/main.c
+index 76ca151..f8e267c 100644
+--- a/src/ucm/main.c
++++ b/src/ucm/main.c
+@@ -619,7 +619,7 @@ static int set_modifier(snd_use_case_mgr_t *uc_mgr,
+ 	if (enable && err >= 0) {
+ 		list_add_tail(&modifier->active_list, &uc_mgr->active_modifiers);
+ 	} else if (!enable) {
+-		list_del(&modifier->active_list);
++		list_del_init(&modifier->active_list);
+ 	}
+ 	return err;
+ }
+@@ -650,7 +650,7 @@ static int set_device(snd_use_case_mgr_t *uc_mgr,
+ 	if (enable && err >= 0) {
+ 		list_add_tail(&device->active_list, &uc_mgr->active_devices);
+ 	} else if (!enable) {
+-		list_del(&device->active_list);
++		list_del_init(&device->active_list);
+ 	}
+ 	return err;
+ }
+@@ -1514,7 +1514,7 @@ static int switch_device(snd_use_case_mgr_t *uc_mgr,
+         xold = find_device(uc_mgr, uc_mgr->active_verb, old_device, 1);
+         if (xold == NULL)
+                 return -ENOENT;
+-        list_del(&xold->active_list);
++        list_del_init(&xold->active_list);
+         xnew = find_device(uc_mgr, uc_mgr->active_verb, new_device, 1);
+         list_add_tail(&xold->active_list, &uc_mgr->active_devices);
+         if (xnew == NULL)
+@@ -1528,7 +1528,7 @@ static int switch_device(snd_use_case_mgr_t *uc_mgr,
+ 					       &uc_mgr->active_verb->value_list,
+ 					       &uc_mgr->value_list);
+                         if (err >= 0) {
+-                                list_del(&xold->active_list);
++                                list_del_init(&xold->active_list);
+                                 list_add_tail(&xnew->active_list, &uc_mgr->active_devices);
+                         }
+                         seq_found = 1;
+@@ -1580,7 +1580,7 @@ static int switch_modifier(snd_use_case_mgr_t *uc_mgr,
+ 					       &uc_mgr->active_verb->value_list,
+ 					       &uc_mgr->value_list);
+                         if (err >= 0) {
+-                                list_del(&xold->active_list);
++                                list_del_init(&xold->active_list);
+                                 list_add_tail(&xnew->active_list, &uc_mgr->active_modifiers);
+                         }
+                         seq_found = 1;
+diff --git a/src/ucm/parser.c b/src/ucm/parser.c
+index e999619..cc9dc3e 100644
+--- a/src/ucm/parser.c
++++ b/src/ucm/parser.c
+@@ -501,6 +501,7 @@ static int parse_modifier(snd_use_case_mgr_t *uc_mgr,
+ 	INIT_LIST_HEAD(&modifier->transition_list);
+ 	INIT_LIST_HEAD(&modifier->dev_list.list);
+ 	INIT_LIST_HEAD(&modifier->value_list);
++	INIT_LIST_HEAD(&modifier->active_list);
+ 	list_add_tail(&modifier->list, &verb->modifier_list);
+ 	modifier->name = strdup(name);
+ 
+@@ -647,6 +648,7 @@ static int parse_device(snd_use_case_mgr_t *uc_mgr,
+ 	INIT_LIST_HEAD(&device->transition_list);
+ 	INIT_LIST_HEAD(&device->dev_list.list);
+ 	INIT_LIST_HEAD(&device->value_list);
++	INIT_LIST_HEAD(&device->active_list);
+ 	list_add_tail(&device->list, &verb->device_list);
+ 	device->name = strdup(name);
+ 
+--
+cgit v0.9.0.3

@@ -1,0 +1,9 @@
+config BR2_PACKAGE_PAM
+	bool "linux-pam"
+        select BR2_PACKAGE_GETTEXT
+        select BR2_PACKAGE_LIBINTL
+	help
+	  Pluggable Authentication Modules is a flexible mechanism for authenticating users.
+
+
+	  http://www.kernel.org/pub/linux/libs/pam/whatispam.html

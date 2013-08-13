@@ -1,0 +1,40 @@
+From 3a9cddc496b4c92248f399a9b2a1ab55fa643b7c Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Fri, 9 Mar 2012 11:36:42 +0100
+Subject: [PATCH v2] USB-Audio: Blacklist iec958 for some USB devices
+
+Some common USB devices are analog only, so prevent the digital
+devices from being opened. This simplifies probing the device
+in PulseAudio.
+
+I have a "Logitech USB Headset" myself, the "Logitech Web Camera"
+was reported by Raymond Yau, and the "Blue Snowball" was reported by
+Andy Whitcroft.
+
+Cc: Andy Whitcroft <andy.whitcroft@canonical.com>
+Cc: Raymond Yau <superquad.vortex2@gmail.com>
+BugLink: https://bugs.launchpad.net/bugs/940145
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/conf/cards/USB-Audio.conf |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/src/conf/cards/USB-Audio.conf b/src/conf/cards/USB-Audio.conf
+index 0726c34..d7c121e 100644
+--- a/src/conf/cards/USB-Audio.conf
++++ b/src/conf/cards/USB-Audio.conf
+@@ -36,6 +36,11 @@ USB-Audio.pcm.surround40_type {
+ # number for the iec958 device can be changed here.
+ USB-Audio.pcm.iec958_device {
+ 	# "NoiseBlaster 3000" 42
++
++	# The below don't have digital in/out, so prevent them from being opened.
++	"Logitech USB Headset" 999
++	"Logitech Web Camera" 999
++	"Blue Snowball" 999
+ }
+ 
+ 
+-- 
+1.7.9
+
