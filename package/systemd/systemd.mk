@@ -21,7 +21,6 @@ endif
 SYSTEMD_CONF_OPT += \
 	--with-distro=other \
 	--disable-selinux \
-	--disable-pam \
 	--disable-libcryptsetup \
 	--disable-gtk \
 	--disable-plymouth \
@@ -44,6 +43,13 @@ endif
 
 ifneq ($(BR2_LARGEFILE),y)
 	SYSTEMD_CONF_OPT += --disable-largefile
+endif
+
+ifeq ($(BR2_PACKAGE_PAM),y)
+	SYSTEMD_CONF_OPT += --enable-pam
+	SYSTEMD_DEPENDENCIES += linux-pam
+else
+	SYSTEMD_CONF_OPT += --disable-pam
 endif
 
 # mq_getattr needs -lrt

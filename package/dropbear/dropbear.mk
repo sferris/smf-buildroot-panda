@@ -45,6 +45,14 @@ DROPBEAR_POST_EXTRACT_HOOKS += DROPBEAR_BUILD_FEATURED
 DROPBEAR_DEPENDENCIES += zlib
 endif
 
+ifeq ($(BR2_PACKAGE_PAM),y)
+DROPBEAR_CONF_OPT += --enable-pam
+DROPBEAR_DEPENDENCIES += linux-pam
+else
+DROPBEAR_CONF_OPT += --disable-pam
+endif
+
+
 ifneq ($(BR2_PACKAGE_DROPBEAR_WTMP),y)
 DROPBEAR_CONF_OPT += --disable-wtmp
 endif

@@ -114,6 +114,13 @@ define BUSYBOX_NETKITTELNET
 endef
 endif
 
+# Enable usage of PAM if linux-pam package is selected
+ifeq ($(BR2_PACKAGE_PAM),y)
+define BUSYBOX_PAM
+	$(call KCONFIG_ENABLE_OPT,CONFIG_PAM,$(BUSYBOX_BUILD_CONFIG))
+endef
+endif
+
 define BUSYBOX_COPY_CONFIG
 	cp -f $(BUSYBOX_CONFIG_FILE) $(BUSYBOX_BUILD_CONFIG)
 endef

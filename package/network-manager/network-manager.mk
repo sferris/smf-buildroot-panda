@@ -26,6 +26,8 @@ NETWORK_MANAGER_CONF_OPT = \
 		--disable-doxygen-docs \
 		--disable-static \
 		--enable-dnotify \
+		--with-dhcpcd=no \
+		--with-dhclient=/usr/sbin/dhclient \
 		--localstatedir=/var \
 		--with-crypto=gnutls \
 		--with-distro=arch \
